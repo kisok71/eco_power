@@ -342,6 +342,17 @@ body {
     box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
 }
 
+.btn-download {
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.btn-download:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
 .btn-outline {
     background: transparent;
     border: 1px solid var(--border-color);

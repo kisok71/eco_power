@@ -1,0 +1,15 @@
+﻿{
+    "Sched1_Enabled":  true,
+    "Sched1_Hour":  "11",
+    "Sched1_Min":  "15",
+    "Sched1_Action":  0,
+    "Sched2_Enabled":  true,
+    "Sched2_Hour":  "21",
+    "Sched2_Min":  "48",
+    "Sched2_Action":  2,
+    "Timer_Mins":  "30",
+    "Timer_Action":  0,
+    "Idle_Enabled":  false,
+    "Idle_Mins":  10,
+    "Idle_Action":  0
+}

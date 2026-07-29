@@ -125,9 +125,9 @@ Add-Type -TypeDefinition $Win32Code -ErrorAction SilentlyContinue
 
                 <!-- Left Navigation -->
                 <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                    <Button x:Name="NavTimer" Content="⏱️ 타이머 설정" Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Background="#00F2FE" Foreground="#0F172A"/>
+                    <Button x:Name="NavSchedule" Content="⏰ 예약 시간 절전" Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Background="#00F2FE" Foreground="#0F172A"/>
+                    <Button x:Name="NavTimer" Content="⏱️ 타이머 설정" Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"/>
                     <Button x:Name="NavIdle" Content="💤 부재 감지 절전" Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"/>
-                    <Button x:Name="NavSchedule" Content="⏰ 예약 시간 절전" Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"/>
                     <Button x:Name="NavPowerPlan" Content="🔋 전원 플랜 관리" Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"/>
                     
                     <Border Background="#1C2130" CornerRadius="10" Padding="12" Margin="0,20,0,0">
@@ -144,7 +144,7 @@ Add-Type -TypeDefinition $Win32Code -ErrorAction SilentlyContinue
                 <Border Grid.Column="1" Background="#1C2130" CornerRadius="12" Padding="24">
                     <Grid>
                         <!-- PANEL 1: Timer -->
-                        <Grid x:Name="PanelTimer" Visibility="Visible">
+                        <Grid x:Name="PanelTimer" Visibility="Collapsed">
                             <StackPanel>
                                 <TextBlock Text="⏱️ 카운트다운 타이머 절전" Foreground="#F8FAFC" FontSize="20" FontWeight="Bold"/>
                                 <TextBlock Text="지정한 시간이 지나면 지정한 전원 동작(절전/종료 등)을 자동으로 실행합니다." Foreground="#94A3B8" FontSize="13" Margin="0,4,0,20"/>
@@ -227,16 +227,16 @@ Add-Type -TypeDefinition $Win32Code -ErrorAction SilentlyContinue
                         </Grid>
 
                         <!-- PANEL 3: Schedule -->
-                        <Grid x:Name="PanelSchedule" Visibility="Collapsed">
+                        <Grid x:Name="PanelSchedule" Visibility="Visible">
                             <StackPanel>
                                 <TextBlock Text="⏰ 예약 시간 절전 및 종료 (2개 예약 설정)" Foreground="#F8FAFC" FontSize="20" FontWeight="Bold"/>
-                                <TextBlock Text="매일 지정한 시각에 자동으로 절전/종료를 수행합니다. (최대 2개 예약 지원)" Foreground="#94A3B8" FontSize="13" Margin="0,4,0,15"/>
+                                <TextBlock Text="매일 지정한 시각에 자동으로 절전/종료를 수행합니다. (점심시간 &amp; 퇴근시간 등)" Foreground="#94A3B8" FontSize="13" Margin="0,4,0,15"/>
 
                                 <!-- Schedule 1 Box -->
                                 <Border Background="#0F172A" CornerRadius="10" Padding="15" Margin="0,0,0,12" BorderBrush="#334155" BorderThickness="1">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,10">
-                                            <CheckBox x:Name="ChkEnableSchedule1" Content="📌 예약 1 활성화" Foreground="#00F2FE" FontSize="15" FontWeight="Bold"/>
+                                            <CheckBox x:Name="ChkEnableSchedule1" Content="🍱 점심시간 절전 활성화" Foreground="#00F2FE" FontSize="15" FontWeight="Bold"/>
                                             <TextBlock x:Name="TxtScheduleStatus1" Text="대기 중" Foreground="#94A3B8" FontSize="13" HorizontalAlignment="Right"/>
                                         </Grid>
                                         <Grid>
@@ -264,7 +264,7 @@ Add-Type -TypeDefinition $Win32Code -ErrorAction SilentlyContinue
                                 <Border Background="#0F172A" CornerRadius="10" Padding="15" Margin="0,0,0,12" BorderBrush="#334155" BorderThickness="1">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,10">
-                                            <CheckBox x:Name="ChkEnableSchedule2" Content="📌 예약 2 활성화" Foreground="#00F2FE" FontSize="15" FontWeight="Bold"/>
+                                            <CheckBox x:Name="ChkEnableSchedule2" Content="🌇 퇴근시간 절전 활성화" Foreground="#00F2FE" FontSize="15" FontWeight="Bold"/>
                                             <TextBlock x:Name="TxtScheduleStatus2" Text="대기 중" Foreground="#94A3B8" FontSize="13" HorizontalAlignment="Right"/>
                                         </Grid>
                                         <Grid>
@@ -287,6 +287,11 @@ Add-Type -TypeDefinition $Win32Code -ErrorAction SilentlyContinue
                                         </Grid>
                                     </StackPanel>
                                 </Border>
+
+                                <!-- Save / Apply Schedule Button -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+                                    <Button x:Name="BtnStartSchedule" Content="▶️ 저장 후 백그라운드 실행" Width="240" Height="42" Background="#00F2FE" Foreground="#0F172A" FontSize="15" FontWeight="Bold"/>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
 
@@ -379,6 +384,7 @@ $TxtSchedHour2 = $window.FindName("TxtSchedHour2")
 $TxtSchedMin2 = $window.FindName("TxtSchedMin2")
 $CmbSchedAction2 = $window.FindName("CmbSchedAction2")
 $TxtScheduleStatus2 = $window.FindName("TxtScheduleStatus2")
+$BtnStartSchedule = $window.FindName("BtnStartSchedule")
 
 $ListPowerPlans = $window.FindName("ListPowerPlans")
 $BtnSetPowerSaver = $window.FindName("BtnSetPowerSaver")
@@ -386,6 +392,59 @@ $BtnSetBalanced = $window.FindName("BtnSetBalanced")
 $BtnSetHighPerf = $window.FindName("BtnSetHighPerf")
 
 $TxtFooterStatus = $window.FindName("TxtFooterStatus")
+
+# Settings Persistence Engine (Auto-Save & Auto-Load)
+$ConfigFile = Join-Path $PSScriptRoot "settings.json"
+if (-not $PSScriptRoot -or -not (Test-Path $PSScriptRoot)) {
+    $ConfigFile = "c:\Users\jkiso\Documents\test\settings.json"
+}
+
+function Save-Settings {
+    try {
+        $cfg = [ordered]@{
+            Sched1_Enabled = [bool]$ChkEnableSchedule1.IsChecked
+            Sched1_Hour    = $TxtSchedHour1.Text
+            Sched1_Min     = $TxtSchedMin1.Text
+            Sched1_Action  = $CmbSchedAction1.SelectedIndex
+            Sched2_Enabled = [bool]$ChkEnableSchedule2.IsChecked
+            Sched2_Hour    = $TxtSchedHour2.Text
+            Sched2_Min     = $TxtSchedMin2.Text
+            Sched2_Action  = $CmbSchedAction2.SelectedIndex
+            Timer_Mins     = $TxtTimerMinutes.Text
+            Timer_Action   = $CmbTimerAction.SelectedIndex
+            Idle_Enabled   = [bool]$ChkEnableIdle.IsChecked
+            Idle_Mins      = [int]$SliderIdleMinutes.Value
+            Idle_Action    = $CmbIdleAction.SelectedIndex
+        }
+        $json = $cfg | ConvertTo-Json -Depth 2
+        [System.IO.File]::WriteAllText($ConfigFile, $json, [System.Text.Encoding]::UTF8)
+    } catch {}
+}
+
+function Load-Settings {
+    if (Test-Path $ConfigFile) {
+        try {
+            $json = [System.IO.File]::ReadAllText($ConfigFile, [System.Text.Encoding]::UTF8)
+            $cfg = $json | ConvertFrom-Json
+            if ($null -ne $cfg.Sched1_Enabled) { $ChkEnableSchedule1.IsChecked = [bool]$cfg.Sched1_Enabled }
+            if ($null -ne $cfg.Sched1_Hour -and $cfg.Sched1_Hour -ne "") { $TxtSchedHour1.Text = [string]$cfg.Sched1_Hour }
+            if ($null -ne $cfg.Sched1_Min -and $cfg.Sched1_Min -ne "") { $TxtSchedMin1.Text = [string]$cfg.Sched1_Min }
+            if ($null -ne $cfg.Sched1_Action -and $cfg.Sched1_Action -ge 0) { $CmbSchedAction1.SelectedIndex = [int]$cfg.Sched1_Action }
+            if ($null -ne $cfg.Sched2_Enabled) { $ChkEnableSchedule2.IsChecked = [bool]$cfg.Sched2_Enabled }
+            if ($null -ne $cfg.Sched2_Hour -and $cfg.Sched2_Hour -ne "") { $TxtSchedHour2.Text = [string]$cfg.Sched2_Hour }
+            if ($null -ne $cfg.Sched2_Min -and $cfg.Sched2_Min -ne "") { $TxtSchedMin2.Text = [string]$cfg.Sched2_Min }
+            if ($null -ne $cfg.Sched2_Action -and $cfg.Sched2_Action -ge 0) { $CmbSchedAction2.SelectedIndex = [int]$cfg.Sched2_Action }
+            if ($null -ne $cfg.Timer_Mins -and $cfg.Timer_Mins -ne "") { 
+                $TxtTimerMinutes.Text = [string]$cfg.Timer_Mins
+                $SliderTimerMinutes.Value = [int]$cfg.Timer_Mins
+            }
+            if ($null -ne $cfg.Timer_Action -and $cfg.Timer_Action -ge 0) { $CmbTimerAction.SelectedIndex = [int]$cfg.Timer_Action }
+            if ($null -ne $cfg.Idle_Enabled) { $ChkEnableIdle.IsChecked = [bool]$cfg.Idle_Enabled }
+            if ($null -ne $cfg.Idle_Mins) { $SliderIdleMinutes.Value = [int]$cfg.Idle_Mins }
+            if ($null -ne $cfg.Idle_Action -and $cfg.Idle_Action -ge 0) { $CmbIdleAction.SelectedIndex = [int]$cfg.Idle_Action }
+        } catch {}
+    }
+}
 
 # State Variables
 $script:TimerActive = $false
@@ -395,7 +454,7 @@ $script:CaffeineActive = $false
 
 # Window Dragging & Title Bar Actions
 $HeaderBar.Add_MouseLeftButtonDown({
-    $window.DragMove()
+    try { $window.DragMove() } catch {}
 })
 
 $BtnMinimize.Add_Click({
@@ -403,8 +462,23 @@ $BtnMinimize.Add_Click({
 })
 
 $BtnClose.Add_Click({
-    [Win32Power]::SetKeepAwake($false)
-    $window.Close()
+    try { [Win32Power]::SetKeepAwake($false) } catch {}
+    try { $window.Close() } catch {}
+})
+
+# BtnStartSchedule Click Action: Save Settings, Start Background Worker, & Close GUI Window
+$BtnStartSchedule.Add_Click({
+    try { Save-Settings } catch {}
+    try {
+        $bgScript = Join-Path $PSScriptRoot "PowerSaver_Background.ps1"
+        if (-not $PSScriptRoot -or -not (Test-Path $PSScriptRoot)) {
+            $bgScript = "c:\Users\jkiso\Documents\test\PowerSaver_Background.ps1"
+        }
+        Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""$bgScript""" -WindowStyle Hidden
+    } catch {}
+    try {
+        $window.Close()
+    } catch {}
 })
 
 # Navigation Switching Helper
@@ -539,32 +613,32 @@ $timer.Add_Tick({
         Execute-PowerAction $CmbIdleAction.SelectedIndex
     }
 
-    # 3. Schedule 1 Check Logic
+    # 3. Schedule 1 Check Logic (점심시간)
     if ($ChkEnableSchedule1.IsChecked) {
         $now = Get-Date
         $targetH1 = [int]$TxtSchedHour1.Text
         $targetM1 = [int]$TxtSchedMin1.Text
-        $TxtScheduleStatus1.Text = "예약 1: {0:D2}:{1:D2} 대기 중" -f $targetH1, $targetM1
+        $TxtScheduleStatus1.Text = "점심시간({0:D2}:{1:D2}) 대기 중" -f $targetH1, $targetM1
         if ($now.Hour -eq $targetH1 -and $now.Minute -eq $targetM1 -and $now.Second -le 1) {
-            $TxtFooterStatus.Text = "예약 1 시각 도달. 지정 동작 실행..."
+            $TxtFooterStatus.Text = "점심시간 예약 시각 도달. 지정 동작 실행..."
             Execute-PowerAction $CmbSchedAction1.SelectedIndex
         }
     } else {
-        $TxtScheduleStatus1.Text = "예약 1: 비활성화됨"
+        $TxtScheduleStatus1.Text = "점심시간: 비활성화됨"
     }
 
-    # 4. Schedule 2 Check Logic
+    # 4. Schedule 2 Check Logic (퇴근시간)
     if ($ChkEnableSchedule2.IsChecked) {
         $now = Get-Date
         $targetH2 = [int]$TxtSchedHour2.Text
         $targetM2 = [int]$TxtSchedMin2.Text
-        $TxtScheduleStatus2.Text = "예약 2: {0:D2}:{1:D2} 대기 중" -f $targetH2, $targetM2
+        $TxtScheduleStatus2.Text = "퇴근시간({0:D2}:{1:D2}) 대기 중" -f $targetH2, $targetM2
         if ($now.Hour -eq $targetH2 -and $now.Minute -eq $targetM2 -and $now.Second -le 1) {
-            $TxtFooterStatus.Text = "예약 2 시각 도달. 지정 동작 실행..."
+            $TxtFooterStatus.Text = "퇴근시간 예약 시각 도달. 지정 동작 실행..."
             Execute-PowerAction $CmbSchedAction2.SelectedIndex
         }
     } else {
-        $TxtScheduleStatus2.Text = "예약 2: 비활성화됨"
+        $TxtScheduleStatus2.Text = "퇴근시간: 비활성화됨"
     }
 })
 
@@ -623,6 +697,29 @@ $BtnSetHighPerf.Add_Click({
     Update-PowerPlans
     $TxtFooterStatus.Text = "전원 모드: [고성능]으로 전환됨"
 })
+
+# Attach Auto-Save Listeners
+$window.Add_Closing({ Save-Settings })
+
+$TxtSchedHour1.Add_TextChanged({ Save-Settings })
+$TxtSchedMin1.Add_TextChanged({ Save-Settings })
+$ChkEnableSchedule1.Add_Click({ Save-Settings })
+$CmbSchedAction1.Add_SelectionChanged({ Save-Settings })
+
+$TxtSchedHour2.Add_TextChanged({ Save-Settings })
+$TxtSchedMin2.Add_TextChanged({ Save-Settings })
+$ChkEnableSchedule2.Add_Click({ Save-Settings })
+$CmbSchedAction2.Add_SelectionChanged({ Save-Settings })
+
+$TxtTimerMinutes.Add_TextChanged({ Save-Settings })
+$CmbTimerAction.Add_SelectionChanged({ Save-Settings })
+
+$ChkEnableIdle.Add_Click({ Save-Settings })
+$SliderIdleMinutes.Add_ValueChanged({ Save-Settings })
+$CmbIdleAction.Add_SelectionChanged({ Save-Settings })
+
+# Auto-Load Previous Settings on Startup
+Load-Settings
 
 # Start Master Timer for Idle/Schedule ticks
 $timer.Start()
