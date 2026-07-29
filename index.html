@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC PowerSaver Pro - 스마트 전원 & 절전 관리 대시보드</title>
+    <meta name="description" content="스마트한 PC 전원 관리, 자동 절전, 예약 종료 및 전기 요금 절감 대시보드">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">⚡</div>
+                <div class="brand-text">
+                    <h2>PowerSaver</h2>
+                    <span class="version">v1.0 Pro</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard">
+                    <span class="icon">📊</span>
+                    <span>대시보드</span>
+                </button>
+                <button class="nav-item" data-tab="timer">
+                    <span class="icon">⏱️</span>
+                    <span>타이머 절전</span>
+                </button>
+                <button class="nav-item" data-tab="calculator">
+                    <span class="icon">💡</span>
+                    <span>전력 절감 계산기</span>
+                </button>
+                <button class="nav-item" data-tab="commands">
+                    <span class="icon">💻</span>
+                    <span>명령어 매니저</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="status-card">
+                    <span class="status-dot online"></span>
+                    <span class="status-text">PowerSaver 엔진 연결됨</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title">
+                    <h1 id="page-title">스마트 전원 대시보드</h1>
+                    <p class="subtitle">실시간 전원 상태와 시스템 효율을 관리하세요.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline" id="btn-caffeine-web">
+                        <span class="btn-icon">☕</span>
+                        <span id="caffeine-text">카페인 모드: OFF</span>
+                    </button>
+                    <button class="btn btn-primary" id="btn-launch-gui">
+                        <span class="btn-icon">🚀</span>
+                        <span>GUI 프로그램 실행 가이드</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: Dashboard Overview -->
+            <section class="tab-content active" id="tab-dashboard">
+                <div class="metrics-grid">
+                    <div class="metric-card glass">
+                        <div class="metric-icon cyan">🌙</div>
+                        <div class="metric-info">
+                            <span class="label">추천 절전 시간</span>
+                            <span class="value">30분</span>
+                            <span class="subtext">부재 시 자동 절전 권장</span>
+                        </div>
+                    </div>
+                    <div class="metric-card glass">
+                        <div class="metric-icon blue">⚡</div>
+                        <div class="metric-info">
+                            <span class="label">월간 소비 전력 절감</span>
+                            <span class="value" id="stat-kwh">약 28.5 kWh</span>
+                            <span class="subtext">대기 전력 차단 기준</span>
+                        </div>
+                    </div>
+                    <div class="metric-card glass">
+                        <div class="metric-icon green">💰</div>
+                        <div class="metric-info">
+                            <span class="label">예상 전기 요금 절약</span>
+                            <span class="value" id="stat-cost">약 ₩ 5,700원</span>
+                            <span class="subtext">누진세 미적용 기본 세이빙</span>
+                        </div>
+                    </div>
+                    <div class="metric-card glass">
+                        <div class="metric-icon purple">🌱</div>
+                        <div class="metric-info">
+                            <span class="label">탄소 배출 절감량</span>
+                            <span class="value" id="stat-co2">12.2 kg</span>
+                            <span class="subtext">소나무 약 1.8그루 효과</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Quick Controller -->
+                    <div class="card glass shadow">
+                        <div class="card-header">
+                            <h3>⚡ Quick Control Center</h3>
+                            <span class="badge">Windows Native API</span>
+                        </div>
+                        <div class="quick-buttons">
+                            <button class="quick-btn" id="q-screen-off">
+                                <div class="q-icon">🖥️</div>
+                                <div class="q-title">즉시 화면 끄기</div>
+                                <div class="q-desc">모니터 전원만 즉시 차단</div>
+                            </button>
+                            <button class="quick-btn" id="q-sleep">
+                                <div class="q-icon">🌙</div>
+                                <div class="q-title">즉시 절전 모드</div>
+                                <div class="q-desc">시스템저전력 대기 상태</div>
+                            </button>
+                            <button class="quick-btn" id="q-hibernate">
+                                <div class="q-icon">💤</div>
+                                <div class="q-title">최대 절전 모드</div>
+                                <div class="q-desc">RAM 상태를 disk 저장 후 종료</div>
+                            </button>
+                            <button class="quick-btn warning" id="q-shutdown">
+                                <div class="q-icon">🔌</div>
+                                <div class="q-title">PC 완전 종료</div>
+                                <div class="q-desc">안전한 시스템 Shutdown</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- App Run Card -->
+                    <div class="card glass shadow highlight-card">
+                        <div class="card-header">
+                            <h3>🖥️ Windows GUI 실행</h3>
+                        </div>
+                        <p>Windows용 데스크톱 GUI 애플리케이션 <code>PowerSaver.ps1</code>이 준비되어 있습니다.</p>
+                        <div class="launcher-box">
+                            <div class="file-tag">Run_PowerSaver.bat</div>
+                            <p class="launcher-desc">더블 클릭 시 시스템 트레이와 함께 모던 다크 글래스 GUI가 시작됩니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: Interactive Timer -->
+            <section class="tab-content" id="tab-timer">
+                <div class="card glass main-timer-card">
+                    <div class="timer-display">
+                        <div class="radial-timer">
+                            <svg class="progress-ring" width="220" height="220">
+                                <circle class="progress-ring-bg" stroke="rgba(255,255,255,0.08)" stroke-width="12" fill="transparent" r="90" cx="110" cy="110"/>
+                                <circle class="progress-ring-circle" id="timer-ring" stroke="#00F2FE" stroke-width="12" stroke-dasharray="565" stroke-dashoffset="0" fill="transparent" r="90" cx="110" cy="110"/>
+                            </svg>
+                            <div class="time-text">
+                                <span id="timer-clock">30:00</span>
+                                <span class="time-sub" id="timer-action-label">절전 모드 대기 중</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timer-controls">
+                        <label class="input-label">빠른 분 선택</label>
+                        <div class="presets-row">
+                            <button class="btn-preset active" data-mins="15">15분</button>
+                            <button class="btn-preset" data-mins="30">30분</button>
+                            <button class="btn-preset" data-mins="60">1시간</button>
+                            <button class="btn-preset" data-mins="120">2시간</button>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="web-timer-slider">타이머 세부 조절 (1분 ~ 300분)</label>
+                            <input type="range" id="web-timer-slider" min="1" max="300" value="30">
+                        </div>
+
+                        <div class="action-select-group">
+                            <label for="web-action-select">타이머 만료 시 동작</label>
+                            <select id="web-action-select">
+                                <option value="sleep">🌙 절전 모드 (Sleep)</option>
+                                <option value="screenoff">🖥️ 화면만 끄기 (Screen Off)</option>
+                                <option value="hibernate">💤 최대 절전 모드 (Hibernate)</option>
+                                <option value="shutdown">🔌 PC 완전 종료 (Shutdown)</option>
+                            </select>
+                        </div>
+
+                        <div class="timer-btn-row">
+                            <button class="btn btn-primary lg" id="btn-start-web-timer">▶️ 타이머 시작</button>
+                            <button class="btn btn-danger lg" id="btn-stop-web-timer" disabled>⏹️ 취소</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: Power Calculator -->
+            <section class="tab-content" id="tab-calculator">
+                <div class="card glass">
+                    <div class="card-header">
+                        <h3>💡 PC 절전 소비전력 & 전기요금 절감 계산기</h3>
+                    </div>
+                    <div class="calc-grid">
+                        <div class="calc-inputs">
+                            <div class="input-field">
+                                <label>PC 평균 소비전력 (W)</label>
+                                <input type="number" id="calc-watt" value="150" min="30" max="1000">
+                                <span class="field-help">사무용 PC: ~80W, 게이밍 PC: 200W~400W</span>
+                            </div>
+                            <div class="input-field">
+                                <label>하루 방치/대기 시간 (시간)</label>
+                                <input type="number" id="calc-hours" value="4" min="1" max="24">
+                            </div>
+                            <div class="input-field">
+                                <label>kWh당 누진 요금 단가 (원)</label>
+                                <input type="number" id="calc-rate" value="200" min="50" max="500">
+                                <span class="field-help">주택용 고압/저압 평균 단가</span>
+                            </div>
+                        </div>
+
+                        <div class="calc-results">
+                            <div class="result-box">
+                                <span class="res-title">하루 절감 전력</span>
+                                <span class="res-value" id="res-daily-kwh">0.60 kWh</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="res-title">월간 절감 전력</span>
+                                <span class="res-value" id="res-monthly-kwh">18.0 kWh</span>
+                            </div>
+                            <div class="result-box highlight">
+                                <span class="res-title">월간 절약 금액</span>
+                                <span class="res-value" id="res-monthly-cost">₩ 3,600 원</span>
+                            </div>
+                            <div class="result-box highlight green">
+                                <span class="res-title">연간 절약 금액</span>
+                                <span class="res-value" id="res-yearly-cost">₩ 43,200 원</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: Commands -->
+            <section class="tab-content" id="tab-commands">
+                <div class="card glass">
+                    <div class="card-header">
+                        <h3>💻 Windows CMD / PowerShell 전원 명령 매니저</h3>
+                    </div>
+                    <div class="cmd-list">
+                        <div class="cmd-item">
+                            <div class="cmd-info">
+                                <h4>🖥️ 화면 즉시 끄기 (PowerShell Win32 API)</h4>
+                                <p>본체 작업(다운로드/음악)은 유지한 채 모니터만 즉시 전원 OFF 합니다.</p>
+                            </div>
+                            <div class="cmd-code-box">
+                                <code>(Add-Type '[DllImport("user32.dll")]public static extern int SendMessage(int h,int m,int w,int l);' -Name a -PassThru)::SendMessage(-1,0x0112,0xF170,2)</code>
+                                <button class="btn-copy" data-copy="(Add-Type '[DllImport(&quot;user32.dll&quot;)]public static extern int SendMessage(int h,int m,int w,int l);' -Name a -PassThru)::SendMessage(-1,0x0112,0xF170,2)">복사</button>
+                            </div>
+                        </div>
+
+                        <div class="cmd-item">
+                            <div class="cmd-info">
+                                <h4>🌙 30분 후 자동 절전 (CMD 명령어)</h4>
+                                <p>30분(1800초) 대기 후 절전 모드를 실행합니다.</p>
+                            </div>
+                            <div class="cmd-code-box">
+                                <code>timeout /t 1800 /nobreak && rundll32.exe powrprof.dll,SetSuspendState 0,1,0</code>
+                                <button class="btn-copy" data-copy="timeout /t 1800 /nobreak && rundll32.exe powrprof.dll,SetSuspendState 0,1,0">복사</button>
+                            </div>
+                        </div>
+
+                        <div class="cmd-item">
+                            <div class="cmd-info">
+                                <h4>🔌 1시간 후 안전 완전 종료</h4>
+                                <p>60분 후 모든 앱을 정리하고 안전하게 PC를 종료합니다.</p>
+                            </div>
+                            <div class="cmd-code-box">
+                                <code>shutdown /s /t 3600 /c "PowerSaver 타이머 종료"</code>
+                                <button class="btn-copy" data-copy="shutdown /s /t 3600 /c &quot;PowerSaver 타이머 종료&quot;">복사</button>
+                            </div>
+                        </div>
+
+                        <div class="cmd-item">
+                            <div class="cmd-info">
+                                <h4>❌ 예약된 종료 명령어 취소</h4>
+                                <p>지정된 `shutdown` 예약을 즉시 취소합니다.</p>
+                            </div>
+                            <div class="cmd-code-box">
+                                <code>shutdown /a</code>
+                                <button class="btn-copy" data-copy="shutdown /a">복사</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">알림 메시지</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
